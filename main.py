@@ -6,8 +6,8 @@ import shutil
 import os
 from tools.nmap_tool import run_nmap
 from tools.sqlmap_tool import run_sqlmap
-#from tools.nikto_tool import run_nikto
-#from tools.hydra_tool import run_hydra
+from tools.nikto_tool import run_nikto
+from tools.hydra_tool import run_hydra
 
 os.system("clear")
 columns, rows = shutil.get_terminal_size()
