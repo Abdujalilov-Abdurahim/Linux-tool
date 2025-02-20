@@ -4,7 +4,8 @@ import os
 
 os.system("clear")
 
-banner = MainColor2(r"""
+def banner():
+  banner = MainColor2(r"""
                                          ^M@@@@@@@@@v                                    
                                       v@@@@@@@@@@@@@@@@@                                 
                                     _@@@@@@@}    ;a@@@@@@@                               
@@ -28,6 +29,7 @@ banner = MainColor2(r"""
                                                ^@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@O  """)
 
 
-print (banner)
+return banner
 
-print ("Siz johni tanladingiz!")
+def john_tool():
+  banner()
