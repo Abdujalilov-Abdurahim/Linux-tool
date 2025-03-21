@@ -11,8 +11,8 @@ from tools.hydra_tool import run_hydra
 
 os.system("clear")
 columns, rows = shutil.get_terminal_size()
-banner = pyfiglet.figlet_format("Xush kelisiz! Bu dastur sizga qanday yordam bera oladi ?!")
-banner_lines = banner.split("\n")
+banner = pyfiglet.figlet_format("Xush kelisiz! Bu dastur sizga qanday yordam bera oladi  ? !")
+banner_lines = banner.split("\n") 
 
 for line in banner_lines:
 	print (line.center(columns))
