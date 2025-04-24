@@ -1,3 +1,5 @@
+#!/bin/bash/python
+
 import os
 from termcolor import colored
 
