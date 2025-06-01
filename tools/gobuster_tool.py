@@ -16,6 +16,7 @@ def banner():
     """)
 
 def run_gobuster():
+    os.system("clear")
     banner()
     print("Gobuster bilan ishlash")
 
@@ -61,10 +62,12 @@ def run_gobuster():
         print("\nGobuster ishga tushirilmoqda...\n")
         os.system(command)
 
-        a = input("Yana foydalanasizmi?: yes/no").lower()
-        if a != "yes":
+        again = input("\n🔁 Shu IP/domen uchun yana foydalanishni xohlaysizmi? (yes/no): ").lower()
+        if again != "yes":
             break
+        back = input("\n⬅️  Boshqa IP/domenni foydalanishni xohlaysizmi? (yes/no): ").lower()
+        if back != "yes":
+            print("🔚 Dastur tugatildi. Asosiy menyuga qaytilmoqda...\n")
+            from main import main
+            return main()
 
-# Test qilish
-if __name__ == "__main__":
-    run_gobuster()
