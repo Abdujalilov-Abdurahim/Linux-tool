@@ -1,90 +1,91 @@
-#/bin/bash/python
+#!/usr/bin/python
 
 import os
-
-from pycparser.c_ast import While
-
+import re
 
 def banner():
-    banner = f"""
-    ██╗  ██╗██╗   ██╗██████╗ ██████╗  █████╗ 
-    ██║  ██║╚██╗ ██╔╝██╔══██╗██╔══██╗██╔══██╗
-    ███████║ ╚████╔╝ ██║  ██║██████╔╝███████║
-    ██╔══██║  ╚██╔╝  ██║  ██║██╔══██╗██╔══██║
-    ██║  ██║   ██║   ██████╔╝██║  ██║██║  ██║
-    ╚═╝  ╚═╝   ╚═╝   ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝
-                                         
-"""
+    print("""
+        ██╗  ██╗██╗   ██╗██████╗ ██████╗  █████╗ 
+        ██║  ██║╚██╗ ██╔╝██╔══██╗██╔══██╗██╔══██╗
+        ███████║ ╚████╔╝ ██║  ██║██████╔╝███████║
+        ██╔══██║  ╚██╔╝  ██║  ██║██╔══██╗██╔══██║
+        ██║  ██║   ██║   ██████╔╝██║  ██║██║  ██║
+        ╚═╝  ╚═╝   ╚═╝   ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝                                 
+    """)
 
+def validate_target(target):
+    ip_pattern = r"^(?:\d{1,3}\.){3}\d{1,3}$"
+    domain_pattern = r"^(?=.{1,253}$)((?!-)[A-Za-z0-9-]{1,63}(?<!-)\.)+[A-Za-z]{2,}$"
+    return re.match(ip_pattern, target) or re.match(domain_pattern, target)
 
 def run_hydra():
+    os.system("clear")
     banner()
-    print("Hydra bilan ishlash")
+    print("🔐 HYDRA Brute Force Hujum Moduli")
 
-    # Maqsadli IP yoki domenni kiritish
+    # Maqsadli IP yoki domenni olish
     while True:
-        target = input("\nMaqsadli IP yoki domenni kiriting: ")
-        if target.replace(".", "").isdigit() or "." in target:
+        target = input("\n🎯 Maqsadli IP yoki domenni kiriting: ").strip()
+        if validate_target(target):
             break
-        print("❌ Noto'g'ri format! Iltimos, to'g'ri IP yoki domen kiriting.")
+        print("❌ Noto'g'ri format! To‘g‘ri IP yoki domen kiriting.")
+
+    # Xizmat tanlash
+    services = {
+        "1": "ssh",
+        "2": "ftp",
+        "3": "telnet",
+        "4": "http-get",
+        "5": "mysql",
+        "6": "rdp"
+    }
+
+    print("\n🔧 Xizmatni tanlang:")
+    for key, val in services.items():
+        print(f"{key}. {val.upper()}")
 
     while True:
-        print("\nXizmatni tanlang:")
-        print("1. SSH")
-        print("2. FTP")
-        print("3. HTTP (Basic auth)")
-        print("4. MySQL")
-        print("5. Telnet")
-        print("6. RDP (Windows)")
-        print("0. Chiqish")
-
-        choice = input("\nTanlovni kiriting: ")
-        service = ""
-
-        if choice == "1":
-            service = "ssh"
-        elif choice == "2":
-            service = "ftp"
-        elif choice == "3":
-            service = "http"
-        elif choice == "4":
-            service = "mysql"
-        elif choice == "5":
-            service = "telnet"
-        elif choice == "6":
-            service = "rdp"
-        elif choice == "0":
-            print("Dasturdan chiqildi.")
-            return
-        else:
-            print("❌ Noto'g'ri tanlov. Iltimos, qaytadan urinib ko'ring.")
-            return
-
-        # Loginni kiritish
-        username = input("Foydalanuvchi nomini kiriting yoki fayl (user.txt) tanlang: ")
-
-        # Parolni kiritish
-        password_option = input("Bitta parolni sinash (1) yoki fayldan (2) yuklash: ")
-
-        if password_option == "1":
-            password = input("Parolni kiriting: ")
-            command = f"hydra -l {username} -p {password} {target} {service}"
-        elif password_option == "2":
-            password_file = input("Parol faylini kiriting (masalan, passwords.txt): ")
-            command = f"hydra -l {username} -P {password_file} {target} {service}"
-        else:
-            print("❌ Noto'g'ri tanlov. Dasturdan chiqildi.")
-            return
-
-        # Hydra buyrug‘ini ishga tushirish
-        print("\nHydra ishga tushirilmoqda...\n")
-        os.system(command)
-
-        a = input("Yana foydalanasizmi?: yes/no").lower()
-        if a != "yes":
+        service_choice = input("\nXizmat raqamini kiriting: ").strip()
+        if service_choice in services:
+            service = services[service_choice]
             break
+        print("❌ Noto'g'ri tanlov. Qayta urinib ko‘ring.")
 
+    # Foydalanuvchi nomi yoki fayl
+    while True:
+        user_input = input("👤 Foydalanuvchi faylini (-L) yoki nomini (-l) kiriting: ").strip()
+        if os.path.isfile(user_input):
+            user_param = f"-L {user_input}"
+            break
+        elif len(user_input) > 0:
+            user_param = f"-l {user_input}"
+            break
+        else:
+            print("❌ Noto'g'ri kirish. Iltimos, foydalanuvchi fayli yoki nomini kiriting.")
 
-# Test qilish
-if __name__ == "__main__":
-    run_hydra()
+    # Parollar faylini so'rash
+    while True:
+        password_file = input("🔑 Parollar faylini kiriting (masalan, passwords.txt): ").strip()
+        if os.path.isfile(password_file):
+            pass_param = f"-P {password_file}"
+            break
+        else:
+            print("❌ Fayl topilmadi. To‘g‘ri fayl nomini kiriting.")
+
+    # Hydra buyrug‘ini tuzish
+    command = f"hydra {user_param} {pass_param} {target} {service}"
+    print(f"\n🚀 Hydra ishga tushirilmoqda:\n👉 {command}\n")
+    os.system(command)
+
+    # Davom ettirish
+    again = input("\n🔁 Yana sinab ko‘rasizmi? (yes/no): ").strip().lower()
+    if again == "yes":
+        run_hydra()
+    else:
+        print("\n⬅️ Asosiy menyuga qaytilmoqda...\n")
+        try:
+            from main import main
+            main()
+        except ImportError:
+            print("⚠️ main.py topilmadi yoki import qilinmadi.")
+
