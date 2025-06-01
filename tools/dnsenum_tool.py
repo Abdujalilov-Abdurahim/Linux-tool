@@ -1,11 +1,18 @@
-#/bin/bash/python
+#!/usr/bin/python
+
 import os
 import re
 
 def banner():
-    banner = f""""""
-
-    return banner
+    os.system("clear")
+    print("""
+        ███████╗██████╗ ███████╗████████╗ ██████╗ ███╗   ██╗
+        ██╔════╝██╔══██╗██╔════╝╚══██╔══╝██╔══██╗████╗  ██║
+        █████╗  ██████╔╝██████╗     ██║   ██████╔╝██╔██╗ ██║
+        ██╔══╝  ██╔══██╗╚════██╗    ██║   ██╔══██╗██║╚██╗██║
+        ███████╗██║  ██║██████╔╝    ██║   ██║  ██║██║ ╚████║
+        ╚══════╝╚═╝  ╚═╝╚═════╝     ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝
+    """)
 
 def run_dnsenum():
     banner()
@@ -31,7 +38,13 @@ def run_dnsenum():
         if choice == "1":
             command = f"dnsenum --enum {target}"
         elif choice == "2":
-            command = f"dnsenum --enum -f subdomains-top1mil-5000.txt {target}"
+            # Faylni so'rash
+            while True:
+                subdomain_file = input("Subdomainlar ro'yxat faylini kiriting (masalan, subdomains.txt): ").strip()
+                if os.path.isfile(subdomain_file):
+                    command = f"dnsenum --enum -f {subdomain_file} {target}"
+                    break
+                print("❌ Fayl topilmadi. To'g'ri fayl yo'lini kiriting.")
         elif choice == "3":
             command = f"dnsenum --enum --axfr {target}"
         elif choice == "4":
@@ -42,15 +55,23 @@ def run_dnsenum():
             return
         else:
             print("❌ Noto'g'ri tanlov! Qaytadan urinib ko‘ring.")
-            return
+            continue
 
         print("\nDNSEnum ishga tushirilmoqda...\n")
         os.system(command)
 
-        a = input("Yana foydalanasizmi?: yes/no").lower()
+        a = input("Yana foydalanasizmi? (yes/no): ").lower()
         if a != "yes":
             break
 
-# Test qilish
-if __name__ == "__main__":
-    run_dnsenum()
+    back = input("\n⬅ Boshqa domenni tekshirasizmi? (yes/no): ").lower()
+    if back == "yes":
+        run_dnsenum()
+    else:
+        print("\n🔚 DNSEnum yakunlandi. Asosiy menyuga qaytmoqda...\n")
+        try:
+            from main import main
+            return main()
+        except ImportError:
+            print("⚠ main.py topilmadi.")
+
