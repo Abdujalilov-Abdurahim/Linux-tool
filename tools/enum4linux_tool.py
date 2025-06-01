@@ -1,32 +1,42 @@
-#/bin/bash/python
+#!/bin/bash/python
 
 import os
 import re
 
 def banner():
-    print("\n============= Enum4Linux Tool =============")
+    os.system("clear")
+    print(r"""
+ ______                 _  _   _            _             
+|  ____|               | || | (_)          | |            
+| |__  __  _____  ___  | || |_ _  ___ _ __ | |_ ___  _ __ 
+|  __| \ \/ / _ \/ _ \ |__   _| |/ _ \ '_ \| __/ _ \| '__|
+| |____ >  <  __/  __/    | | | |  __/ | | | || (_) | |   
+|______/_/\_\___|\___|    |_| |_|\___|_| |_|\__\___/|_|   
+
+🔎 Enum4Linux - Samba (SMB) tarmoqlarini aniqlovchi vosita
+""")
+
+def is_valid_ip(ip):
+    return re.match(r"^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$", ip)
 
 def run_enum4linux():
     banner()
-    print("Enum4Linux bilan ishlash")
 
-    # IP-manzilni tekshirish
     while True:
-        target = input("\nMaqsadli IP-manzilni kiriting (masalan: 192.168.1.100): ")
-        ip_pattern = r"^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$"
-        if re.match(ip_pattern, target):
+        target = input("🎯 Maqsadli IP-manzilni kiriting (masalan: 192.168.1.100): ").strip()
+        if is_valid_ip(target):
             break
-        print("❌ Noto'g'ri IP-manzil formati! Qaytadan urinib ko'ring.")
+        print("❌ Noto'g'ri IP-manzil! Qaytadan urinib ko‘ring.")
 
     while True:
-        print("\nTahlil turini tanlang:")
-        print("1. Foydalanuvchilar va guruhlarni chiqarish")
-        print("2. Ulashilgan papkalar (SMB shares) haqida ma'lumot olish")
-        print("3. RPC xizmatlarini tekshirish")
-        print("4. To'liq skanerlash (barcha ma'lumotlarni olish)")
-        print("0. Chiqish")
+        print("\n📋 Tanlov menyusi:")
+        print("1. 👥 Foydalanuvchilar va guruhlarni aniqlash")
+        print("2. 📁 Ulashilgan papkalarni ko‘rish (SMB shares)")
+        print("3. ⚙  RPC xizmatlarini tekshirish")
+        print("4. 🧪 To‘liq skanerlash (barcha ma'lumotlarni olish)")
+        print("0. 🚪 Chiqish")
 
-        choice = input("\nTanlovni kiriting: ")
+        choice = input("\n🔢 Tanlovni kiriting: ").strip()
 
         if choice == "1":
             command = f"enum4linux -U {target}"
@@ -37,19 +47,18 @@ def run_enum4linux():
         elif choice == "4":
             command = f"enum4linux -a {target}"
         elif choice == "0":
-            print("Dasturdan chiqildi.")
-            return
+            print("🚪 Dasturdan chiqildi.")
+            break
         else:
-            print("❌ Noto'g'ri tanlov! Qaytadan urinib ko‘ring.")
-            return
+            print("❌ Noto‘g‘ri tanlov! Qaytadan urinib ko‘ring.")
+            continue
 
-        print("\nEnum4Linux ishga tushirilmoqda...\n")
+        print("\n🔍 Enum4Linux ishlamoqda...\n")
         os.system(command)
 
-        a = input("Yana foydalanasizmi?: yes/no").lower()
-        if a != "yes":
+        again = input("\n🔁 Yana foydalanasizmi? (yes/no): ").lower()
+        if again != "yes":
+            print("🔙 Asosiy menyuga qaytilmoqda...")
+            os.system("python3 main.py")
             break
-
-# Test qilish
-if __name__ == "__main__":
-    run_enum4linux()
+                                       
