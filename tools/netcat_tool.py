@@ -3,6 +3,7 @@
 import os
 from termcolor import colored
 
+
 def run_netcat():
     os.system("clear")
     print(colored(r"""
@@ -28,7 +29,7 @@ def run_netcat():
         if choice == "1":
             port = input("📡 Tinglash uchun port raqamini kiriting: ")
             os.system(f"nc -lvp {port}")
-        
+
         elif choice == "2":
             target = input("🎯 Maqsadli IP yoki domen: ")
             port = input("🔌 Port raqami: ")
@@ -62,3 +63,13 @@ def run_netcat():
 
         input(colored("\n⏎ Davom etish uchun Enter tugmasini bosing...", "magenta"))
         os.system("clear")
+
+        again = input("\n🔁 Shu IP/domen uchun yana foydalanishni xohlaysizmi? (yes/no): ").lower()
+        if again != "yes":
+            break
+        back = input("\n⬅  Boshqa IP/domenni foydalanishni xohlaysizmi? (yes/no): ").lower()
+        if back != "yes":
+            print("🔚 Dastur tugatildi. Asosiy menyuga qaytilmoqda...\n")
+            from main import main
+            return main()
+
